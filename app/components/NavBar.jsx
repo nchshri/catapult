@@ -23,11 +23,11 @@ export default function NavBar() {
                 />
             </div>
             <div className="flex items-center gap-8 text-lg text-[#6be5be] mr-7 z-20">
-                <h2 onClick={() => scrollToSection("home")} className="cursor-pointer">Home</h2>
-                <h2 onClick={() => scrollToSection("about")} className="cursor-pointer">About</h2>
-                <h2 onClick={() => scrollToSection("schedule")} className="cursor-pointer">Schedule</h2>
-                <h2 onClick={() => scrollToSection("faq")} className="cursor-pointer">FAQs</h2>
-                <h2 onClick={() => scrollToSection("sponsors")} className="cursor-pointer">Sponsors</h2>
+                <h2 onClick={() => scrollToSection("home")} className="cursor-pointer">HOME</h2>
+                <h2 onClick={() => scrollToSection("about")} className="cursor-pointer">ABOUT</h2>
+                <h2 onClick={() => scrollToSection("schedule")} className="cursor-pointer">SCHEDULE</h2>
+                <h2 onClick={() => scrollToSection("faq")} className="cursor-pointer">FAQS</h2>
+                <h2 onClick={() => scrollToSection("sponsors")} className="cursor-pointer">SPONSORS</h2>
             </div>
         </nav>
     )
