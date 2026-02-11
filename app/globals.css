@@ -2,4 +2,5 @@
 
 body {
   background: #151c43;
+  font-family: var(--font-raleway), sans-serif;
 }
