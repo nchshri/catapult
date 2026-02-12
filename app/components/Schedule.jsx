@@ -153,7 +153,7 @@ export default function Schedule() {
       <SparkleOrbs />
       {/* Section heading */}
       <div className={`text-center mb-16 transition-all duration-700 ease-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-        <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+        <h2 className="text-4xl md:text-8xl font-bold text-white tracking-tight">
           Event Schedule
         </h2>
         <p className="mt-4 text-[#6be5be]/60 text-lg max-w-xl mx-auto">
