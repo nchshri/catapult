@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-function SparkleOrbs() {
+function SpiralLines() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -14,58 +14,206 @@ function SparkleOrbs() {
     let height = canvas.parentElement.offsetHeight;
     canvas.width = width;
     canvas.height = height;
-
-    const orbs = Array.from({ length: 40 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      radius: Math.random() * 3 + 1,
-      baseOpacity: Math.random() * 0.4 + 0.1,
-      phase: Math.random() * Math.PI * 2,
-      speed: Math.random() * 0.008 + 0.003,
-      driftX: (Math.random() - 0.5) * 0.3,
-      driftY: (Math.random() - 0.5) * 0.2,
-    }));
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
 
     let animId;
     let time = 0;
 
+    // Define spiral configs — two mirrored spirals on left and right
+    const spirals = [
+      { cx: 0, cy: 0.5, direction: 1 },
+      { cx: 1, cy: 0.5, direction: -1 },
+    ];
+
     function draw() {
       ctx.clearRect(0, 0, width, height);
-      time += 1;
+      time += 0.003;
 
-      for (const orb of orbs) {
-        orb.x += orb.driftX;
-        orb.y += orb.driftY;
+      // ── ANIMATED GRID ──
+      const gridSpacing = 60;
+      const cols = Math.ceil(width / gridSpacing) + 1;
+      const rows = Math.ceil(height / gridSpacing) + 1;
 
-        if (orb.x < -10) orb.x = width + 10;
-        if (orb.x > width + 10) orb.x = -10;
-        if (orb.y < -10) orb.y = height + 10;
-        if (orb.y > height + 10) orb.y = -10;
-
-        const flicker = Math.sin(time * orb.speed + orb.phase) * 0.5 + 0.5;
-        const opacity = orb.baseOpacity * flicker;
-        const glowRadius = orb.radius * (2 + flicker * 3);
-
-        // Outer glow
-        const gradient = ctx.createRadialGradient(
-          orb.x, orb.y, 0,
-          orb.x, orb.y, glowRadius
-        );
-        gradient.addColorStop(0, `rgba(107, 229, 190, ${opacity})`);
-        gradient.addColorStop(0.4, `rgba(107, 229, 190, ${opacity * 0.4})`);
-        gradient.addColorStop(1, 'rgba(107, 229, 190, 0)');
+      // Vertical grid lines with pulse
+      for (let c = 0; c < cols; c++) {
+        const x = c * gridSpacing;
+        const distFromCenter = Math.abs(x - width / 2) / (width / 2);
+        const pulse = Math.sin(time * 1.2 + c * 0.3) * 0.5 + 0.5;
+        const opacity = (0.03 + pulse * 0.025) * (1 - distFromCenter * 0.5);
 
         ctx.beginPath();
-        ctx.arc(orb.x, orb.y, glowRadius, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.fill();
-
-        // Bright core
-        ctx.beginPath();
-        ctx.arc(orb.x, orb.y, orb.radius * 0.6, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(107, 229, 190, ${Math.min(opacity * 1.8, 1)})`;
-        ctx.fill();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.strokeStyle = `rgba(107, 229, 190, ${opacity})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
       }
+
+      // Horizontal grid lines with pulse
+      for (let r = 0; r < rows; r++) {
+        const y = r * gridSpacing;
+        const distFromCenter = Math.abs(y - height / 2) / (height / 2);
+        const pulse = Math.sin(time * 1.5 + r * 0.25) * 0.5 + 0.5;
+        const opacity = (0.03 + pulse * 0.025) * (1 - distFromCenter * 0.4);
+
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.strokeStyle = `rgba(107, 229, 190, ${opacity})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+
+      // ── GRID INTERSECTION DOTS ──
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows; r++) {
+          const x = c * gridSpacing;
+          const y = r * gridSpacing;
+          const dist = Math.hypot(x - width / 2, y - height / 2);
+          const maxDist = Math.hypot(width / 2, height / 2);
+          const pulse = Math.sin(time * 2 + dist * 0.008) * 0.5 + 0.5;
+          const dotOpacity = (0.06 + pulse * 0.08) * (1 - (dist / maxDist) * 0.6);
+          const dotSize = 1 + pulse * 1;
+
+          ctx.beginPath();
+          ctx.arc(x, y, dotSize, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(107, 229, 190, ${dotOpacity})`;
+          ctx.fill();
+        }
+      }
+
+      // ── SCANNING LINES (sharp horizontal sweeps) ──
+      const scanCount = 3;
+      for (let s = 0; s < scanCount; s++) {
+        const scanY = ((time * 80 + s * (height / scanCount)) % (height + 40)) - 20;
+        const scanOpacity = 0.07;
+        const grad = ctx.createLinearGradient(0, scanY - 1, 0, scanY + 1);
+        grad.addColorStop(0, `rgba(107, 229, 190, 0)`);
+        grad.addColorStop(0.5, `rgba(107, 229, 190, ${scanOpacity})`);
+        grad.addColorStop(1, `rgba(107, 229, 190, 0)`);
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, scanY - 15, width, 30);
+      }
+
+      // ── DIAGONAL ACCENT LINES ──
+      const numDiags = 8;
+      for (let d = 0; d < numDiags; d++) {
+        const offset = (d / numDiags) * (width + height);
+        const animOffset = Math.sin(time + d * 0.7) * 30;
+        const opacity = 0.025 + Math.sin(time * 1.8 + d) * 0.015;
+
+        ctx.beginPath();
+        ctx.moveTo(offset + animOffset - height, 0);
+        ctx.lineTo(offset + animOffset, height);
+        ctx.strokeStyle = `rgba(107, 229, 190, ${opacity})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+
+      // ── SPIRALS ──
+      for (const spiral of spirals) {
+        const cx = spiral.cx * width;
+        const cy = spiral.cy * height;
+
+        const numArms = 6;
+        for (let arm = 0; arm < numArms; arm++) {
+          const armOffset = (arm / numArms) * Math.PI * 2;
+          const baseOpacity = 0.12 - arm * 0.012;
+
+          ctx.beginPath();
+          const segments = 180;
+          for (let j = 0; j <= segments; j++) {
+            const t = j / segments;
+            const angle = t * Math.PI * 5 + armOffset + time * spiral.direction;
+            const maxR = Math.min(width, height) * 0.55;
+            const radius = t * maxR * (0.3 + (arm / numArms) * 0.7);
+
+            const x = cx + Math.cos(angle) * radius;
+            const y = cy + Math.sin(angle) * radius;
+
+            if (j === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+
+          ctx.strokeStyle = `rgba(107, 229, 190, ${baseOpacity})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+
+        // Concentric ring bands
+        const numRings = 4;
+        for (let r = 0; r < numRings; r++) {
+          const ringT = (r + 1) / (numRings + 1);
+          const maxR = Math.min(width, height) * 0.55;
+          const ringRadius = ringT * maxR;
+          const wobble = Math.sin(time * 2 + r) * 4;
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, ringRadius + wobble, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(107, 229, 190, ${0.06 - r * 0.01})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+
+      // ── HORIZONTAL FLOWING LINES ──
+      const numLines = 10;
+      for (let i = 0; i < numLines; i++) {
+        const t = (i + 1) / (numLines + 1);
+        const baseY = t * height;
+        const opacity = 0.04 + Math.sin(t * Math.PI) * 0.03;
+
+        ctx.beginPath();
+        const step = 4;
+        for (let x = 0; x <= width; x += step) {
+          const wave = Math.sin((x / width) * Math.PI * 3 + time * 1.5 + i * 0.8) * 12;
+          const y = baseY + wave;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `rgba(107, 229, 190, ${opacity})`;
+        ctx.lineWidth = 0.7;
+        ctx.stroke();
+      }
+
+      // ── CORNER BRACKETS ──
+      const bracketSize = 60;
+      const bracketWeight = 1;
+      const bracketOpacity = 0.12 + Math.sin(time * 2) * 0.04;
+      ctx.strokeStyle = `rgba(107, 229, 190, ${bracketOpacity})`;
+      ctx.lineWidth = bracketWeight;
+
+      // Top-left
+      ctx.beginPath();
+      ctx.moveTo(20, 20 + bracketSize);
+      ctx.lineTo(20, 20);
+      ctx.lineTo(20 + bracketSize, 20);
+      ctx.stroke();
+
+      // Top-right
+      ctx.beginPath();
+      ctx.moveTo(width - 20 - bracketSize, 20);
+      ctx.lineTo(width - 20, 20);
+      ctx.lineTo(width - 20, 20 + bracketSize);
+      ctx.stroke();
+
+      // Bottom-left
+      ctx.beginPath();
+      ctx.moveTo(20, height - 20 - bracketSize);
+      ctx.lineTo(20, height - 20);
+      ctx.lineTo(20 + bracketSize, height - 20);
+      ctx.stroke();
+
+      // Bottom-right
+      ctx.beginPath();
+      ctx.moveTo(width - 20 - bracketSize, height - 20);
+      ctx.lineTo(width - 20, height - 20);
+      ctx.lineTo(width - 20, height - 20 - bracketSize);
+      ctx.stroke();
 
       animId = requestAnimationFrame(draw);
     }
@@ -75,8 +223,9 @@ function SparkleOrbs() {
     const handleResize = () => {
       width = canvas.parentElement.offsetWidth;
       height = canvas.parentElement.offsetHeight;
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
     };
     window.addEventListener('resize', handleResize);
 
@@ -149,8 +298,10 @@ export default function Schedule() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="schedule" className="relative py-24 px-6 max-w-6xl mx-auto overflow-hidden">
-      <SparkleOrbs />
+    <section ref={sectionRef} id="schedule" className="relative py-24 overflow-hidden">
+      <SpiralLines />
+      {/* Content wrapper */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6">
       {/* Section heading */}
       <div className={`text-center mb-16 transition-all duration-700 ease-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <h2 className="text-4xl md:text-8xl font-bold text-white tracking-tight">
@@ -213,6 +364,7 @@ export default function Schedule() {
             );
           })}
         </div>
+      </div>
       </div>
     </section>
   );
