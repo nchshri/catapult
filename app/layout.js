@@ -1,7 +1,7 @@
 import { Raleway, Unbounded } from "next/font/google";
 import "./globals.css";
 import NavBar from "./components/NavBar";
-import SpiralCursor from "./components/Cursor";
+// import SpiralCursor from "./components/Cursor";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${raleway.variable} ${unbounded.variable} antialiased`}
       >
-        <SpiralCursor />
+        {/* <SpiralCursor />*/}
         <NavBar />
         {children}
       </body>
