@@ -35,7 +35,7 @@ export default function NavBar() {
                     <button
                         key={item.section}
                         onClick={() => scrollToSection(item.section)}
-                        className="relative px-6 py-1.5 cursor-pointer backdrop-blur-md bg-[#6be5be]/25 border border-[#6be5be]/45 rounded-[50%] transition-all duration-300 ease-out hover:bg-[#6be5be]/40 hover:border-[#6be5be]/65 hover:shadow-[0_8px_32px_rgba(107,229,190,0.25)] hover:-translate-y-0.5 active:translate-y-0"
+                        className="relative px-6 py-1.5 cursor-pointer backdrop-blur-md bg-[#6be5be]/25 border border-[#6be5be]/45 rounded-2xl transition-all duration-300 ease-out hover:bg-[#6be5be]/40 hover:border-[#6be5be]/65 hover:shadow-[0_8px_32px_rgba(107,229,190,0.25)] hover:-translate-y-0.5 active:translate-y-0"
                     >
                         <span className="relative z-10 tracking-wide text-sm font-medium">
                             {item.label}
