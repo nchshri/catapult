@@ -1,6 +1,6 @@
-import HorizontalLines from "./Lines"
-import PillBadge from "./Pill"
-import PrizeCategories from "./Categories"
+import HorizontalLines from "./Lines";
+import PillBadge from "./Pill";
+import PrizeCategories from "./Categories";
 
 export default function About() {
   return (

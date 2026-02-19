@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import Image from "next/image"
+import Image from "next/image";
 import Link from "next/link";
 
 const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-    }
-}
+  const section = document.getElementById(sectionId);
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth" });
+  }
+};
 
 const navItems = [
-    { label: "HOME", section: "home" },
-    { label: "ABOUT", section: "about" },
-    { label: "SCHEDULE", section: "schedule" },
-    { label: "FAQS", section: "faq" },
-    { label: "SPONSORS", section: "sponsors" },
+  { label: "HOME", section: "home" },
+  { label: "ABOUT", section: "about" },
+  { label: "SCHEDULE", section: "schedule" },
+  { label: "FAQS", section: "faq" },
+  { label: "SPONSORS", section: "sponsors" },
 ];
 
 export default function NavBar() {
