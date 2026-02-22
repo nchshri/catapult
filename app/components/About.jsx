@@ -73,7 +73,7 @@ export default function About() {
       <PhotoGallery />
 
       {/* ——— Categories ——— */}
-      <div className="relative flex mt-22 flex-col items-center justify-center max-w-4xl text-center z-10 w-full">
+      <div className="mt-6 relative flex flex-col items-center justify-center max-w-4xl text-center z-10 w-full">
         <h1 className="text-5xl -mb-17 font-semibold">Categories</h1>
         <PrizeCategories />
       </div>
