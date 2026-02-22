@@ -16,7 +16,7 @@ export default function SpiralBackground() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
-      75,
+      90,
       window.innerWidth / window.innerHeight,
       0.1,
       1000,
@@ -30,7 +30,7 @@ export default function SpiralBackground() {
     renderer.setPixelRatio(window.devicePixelRatio);
     containerRef.current.appendChild(renderer.domElement);
 
-    camera.position.set(40, 0, 80);
+    camera.position.set(40, 0, 23);
     camera.lookAt(40, 0, 0);
 
     const spiralGroup = new THREE.Group();
