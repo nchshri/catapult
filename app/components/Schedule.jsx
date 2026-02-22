@@ -185,18 +185,18 @@ function SpiralLines({ mouseRef }) {
     draw();
 
     const ro = new ResizeObserver(() => {
-           width = canvas.parentElement.offsetWidth;
-           height = canvas.parentElement.offsetHeight;
-           canvas.width = width * dpr;
-           canvas.height = height * dpr;
-           ctx.scale(dpr, dpr);
-         });
-         ro.observe(canvas.parentElement);
+      width = canvas.parentElement.offsetWidth;
+      height = canvas.parentElement.offsetHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    });
+    ro.observe(canvas.parentElement);
 
-         return () => {
-           cancelAnimationFrame(animId);
-           ro.disconnect();
-         };
+    return () => {
+      cancelAnimationFrame(animId);
+      ro.disconnect();
+    };
   }, [mouseRef]);
 
   return (
@@ -214,27 +214,33 @@ const scheduleData = [
       {
         time: "8:00 PM",
         title: "Check-In & Registration",
-        description: "Arrive, get your badge, and settle in.",
+        description: "Arrive, get your badge and merch, and settle in.",
       },
       {
         time: "9:00 PM",
         title: "Opening Ceremony",
-        description: "Kickoff, rules, and theme reveal.",
-      },
-      {
-        time: "10:00 PM",
-        title: "Team Formation",
-        description: "Find teammates and brainstorm ideas.",
+        description: "Kickoff, rules, and schedule overview.",
       },
       {
         time: "10:00 PM",
         title: "Start Hacking!",
-        description: "The clock starts — begin building your project.",
+        description: "The clock starts, begin building your project!",
       },
       {
-        time: "11:30 PM",
-        title: "Late Night Snacks",
-        description: "Fuel up with snacks and drinks.",
+        time: "10:00 PM",
+        title: "Team Building",
+        description: "Find teammates and brainstorm ideas.",
+      },
+      {
+        time: "10:00 PM",
+        title: "Walk-in check-ins",
+        description:
+          "Anyone not registered can check in and get unclaimed food badges.",
+      },
+      {
+        time: "12:30 AM",
+        title: "Midnight Pizza",
+        description: "Fuel up with some midnight Pizza.",
       },
     ],
   },
@@ -244,17 +250,12 @@ const scheduleData = [
       {
         time: "8:00 AM",
         title: "Breakfast",
-        description: "Start the day with a full breakfast spread.",
+        description: "Start the day with a full stomach.",
       },
       {
-        time: "9:00 AM",
-        title: "Workshop: Intro to APIs",
-        description: "Learn how to integrate APIs into your project.",
-      },
-      {
-        time: "10:30 AM",
-        title: "Workshop: UI/UX Design",
-        description: "Tips for building a polished frontend.",
+        time: "10:00 AM",
+        title: "Workshop",
+        description: "To be announced...",
       },
       {
         time: "12:00 PM",
@@ -262,29 +263,20 @@ const scheduleData = [
         description: "Take a break and refuel.",
       },
       {
-        time: "1:00 PM",
-        title: "Workshop: Cloud Deployment",
-        description: "Deploy your app to the cloud in minutes.",
-      },
-      {
-        time: "2:30 PM",
-        title: "Mentor Office Hours",
-        description: "Get 1-on-1 help from industry mentors.",
+        time: "2:00 PM",
+        title: "Workshop",
+        description: "To be announced...",
       },
       {
         time: "4:00 PM",
-        title: "Workshop: AI/ML Crash Course",
-        description: "Add intelligence to your hack with ML.",
-      },
-      {
-        time: "6:00 PM",
-        title: "Dinner",
-        description: "Dinner is served — keep those energy levels up.",
+        title: "Workshop",
+        description: "To be announced...",
       },
       {
         time: "7:00 PM",
-        title: "Lightning Talks",
-        description: "Quick tech talks from sponsors and mentors.",
+        title: "Dinner",
+        description:
+          "Dinner is served, keep that energy level up for the night.",
       },
       {
         time: "10:00 PM",
@@ -296,15 +288,20 @@ const scheduleData = [
   {
     day: "Sunday, April 5",
     events: [
-      { time: "8:00 AM", title: "Breakfast", description: "Last day fuel-up." },
+      {
+        time: "8:00 AM",
+        title: "Breakfast",
+        description: "Last day fuel-up.",
+      },
       {
         time: "9:00 AM",
         title: "Final Push",
-        description: "Polish your project and prepare your demo.",
+        description:
+          "Polish your project and prepare your video for submission.",
       },
       {
         time: "10:00 AM",
-        title: "Hacking Ends — Code Freeze",
+        title: "Hacking Ends!",
         description: "Submit your project on Devpost.",
       },
       {
@@ -320,13 +317,14 @@ const scheduleData = [
       },
       {
         time: "1:00 PM",
-        title: "Closing Ceremony & Awards",
-        description: "Winners announced, prizes awarded.",
+        title: "Round 2: Shark Tank presentations",
+        description:
+          "Top 12 teams will present their project in a Shark-tank style to the audience and judges.",
       },
       {
-        time: "2:00 PM",
-        title: "Event Ends",
-        description: "Thanks for hacking with us!",
+        time: "3:00 PM",
+        title: "Closing Ceremony & Awards",
+        description: "Winners are announced and awards distributed!",
       },
     ],
   },
