@@ -38,11 +38,11 @@ export default function Sponsors() {
     <section
       ref={sectionRef}
       id="sponsors"
-      className="relative h-[100vh] overflow-hidden flex items-center justify-center"
+      className="relative min-h-screen overflow-hidden flex items-center justify-center"
     >
       <RippleBackground />
 
-      <div className="relative z-10 w-full max-w-6xl px-6 py-12 md:py-28 bg-[#6be5be] rounded-b-2xl">
+      <div className="relative z-10 w-full max-w-6xl px-6 py-12 md:py-28 rounded-b-2xl">
         <div
           className="text-center mb-10 md:mb-20"
           style={{
